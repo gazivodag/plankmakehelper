@@ -27,10 +27,13 @@ public class PlankMakeOverlay extends Overlay {
 
 	@Override
 	public Dimension render(Graphics2D graphics) {
+		renderInventory(graphics);
+		renderPlankMakeSpell(graphics);
+		return null;
+	}
 
+	private void renderInventory(Graphics2D graphics) {
 		Widget inventory = client.getWidget(WidgetInfo.INVENTORY);
-
-		Widget lunarSpellBook = client.getWidget(218,128);
 
 		int firstItemSeenIndex = -1;
 
@@ -51,12 +54,13 @@ public class PlankMakeOverlay extends Overlay {
 				OverlayUtil.renderPolygon(graphics, RectangleToPolygon(inventory.getWidgetItem(firstItemSeenIndex).getCanvasBounds()), Color.CYAN);
 			}
 		}
+	}
 
-		if (lunarSpellBook != null) {
-			OverlayUtil.renderPolygon(graphics, RectangleToPolygon(lunarSpellBook.getBounds()), Color.CYAN);
+	private void renderPlankMakeSpell(Graphics2D graphics) {
+		Widget plankMakeSpell = client.getWidget(218,128);
+		if (plankMakeSpell != null && (plankMakeSpell.getCanvasLocation().getX() != 29 & plankMakeSpell.getCanvasLocation().getY() != 32)) {
+			OverlayUtil.renderPolygon(graphics, RectangleToPolygon(plankMakeSpell.getBounds()), Color.CYAN);
 		}
-
-		return null;
 	}
 
 	static Polygon RectangleToPolygon(Rectangle rect) {
