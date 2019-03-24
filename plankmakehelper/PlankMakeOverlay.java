@@ -1,6 +1,6 @@
 package net.runelite.client.plugins.plankmakehelper;
 
-import net.runelite.api.Client;
+import net.runelite.api.*;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
@@ -27,8 +27,10 @@ public class PlankMakeOverlay extends Overlay {
 
 	@Override
 	public Dimension render(Graphics2D graphics) {
-		renderInventory(graphics);
-		renderPlankMakeSpell(graphics);
+		if (hasPlankableItems()) {
+			renderInventory(graphics);
+			renderPlankMakeSpell(graphics);
+		}
 		return null;
 	}
 
@@ -61,6 +63,20 @@ public class PlankMakeOverlay extends Overlay {
 		if (plankMakeSpell != null && (plankMakeSpell.getCanvasLocation().getX() != 29 & plankMakeSpell.getCanvasLocation().getY() != 32)) {
 			OverlayUtil.renderPolygon(graphics, RectangleToPolygon(plankMakeSpell.getBounds()), Color.CYAN);
 		}
+	}
+
+	private boolean hasPlankableItems() {
+		ItemContainer invo = client.getItemContainer(InventoryID.INVENTORY);
+		if (invo != null) {
+			if (invo.getItems().length > 0) {
+				for (Item item : invo.getItems()) {
+					if (PlankMakePlugin.isLogAndPlankable(item.getId())) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	static Polygon RectangleToPolygon(Rectangle rect) {
